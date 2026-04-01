@@ -30,6 +30,8 @@ int main() {
     cout << setw(COLUMN_WIDTH) << right << "List";
     cout << setw(COLUMN_WIDTH) << right << "Set" << endl;
 
+    // Code is easily expandible for more races by just adding more functions and calling them here
+    // The displayTimes() function can also be reused to make this even simpler
     timeReading(v, l, s);
     timeSorting(v, l);
     timeInserting(v, l, s);
@@ -45,6 +47,12 @@ auto duration = duration_cast<milliseconds>(end - start)
 duration.count() references elapsed milliseconds
 */
 
+// displayTimes() displays a row, with specified name and times
+// parameters: string row_name - the name of the row to be displayed
+//             nanoseconds v - the time taken for the vector operation
+//             nanoseconds l - the time taken for the list operation
+//             nanoseconds s - the time taken for the set operation
+// returns: void
 void displayTimes(string row_name, nanoseconds v, nanoseconds l, nanoseconds s) {
     cout << setw(COLUMN_WIDTH) << right << row_name;
     cout << setw(COLUMN_WIDTH) << right << v.count();
@@ -52,6 +60,11 @@ void displayTimes(string row_name, nanoseconds v, nanoseconds l, nanoseconds s) 
     cout << setw(COLUMN_WIDTH) << right << s.count() << endl;
 }
 
+// timeReading() reads codes from the file into the ADTs and times it
+// parameters: vector<string>& v - the vector to read into
+//             list<string>& l - the list to read into
+//             set<string>& s - the set to read into
+// returns: void
 void timeReading(vector<string>& v, list<string>& l, set<string>& s) {
     ifstream fin;
     fin.open("codes.txt");
@@ -85,8 +98,8 @@ void timeReading(vector<string>& v, list<string>& l, set<string>& s) {
     auto l_duration = duration_cast<nanoseconds>(end - start);
     
     // SET TESTING
-    fin.clear();
-    fin.seekg(0); // move pointer to the beginning of the file
+    fin.clear(); // clear the flags
+    fin.seekg(0); // move pointer to the beginning of the file so we can read again
     start = high_resolution_clock::now();
 
     while (fin >> code) {
@@ -99,6 +112,11 @@ void timeReading(vector<string>& v, list<string>& l, set<string>& s) {
     displayTimes("Read", v_duration, l_duration, s_duration);
 }
 
+// timeSorting() sorts the ADTs and times it
+// parameters: vector<string>& v - the vector to sort
+//             list<string>& l - the list to sort
+//             set<string>& s - the set to sort
+// returns: void
 void timeSorting(vector<string>& v, list<string>& l) {
     // VECTOR TESTING
     auto start = high_resolution_clock::now();
@@ -121,6 +139,11 @@ void timeSorting(vector<string>& v, list<string>& l) {
     displayTimes("Sort", v_duration, l_duration, s_duration);
 }
 
+// timeInserting() inserts "TESTCODE" into the middle of the ADTs and times it
+// parameters: vector<string>& v - the vector to insert into
+//             list<string>& l - the list to insert into
+//             set<string>& s - the set to insert into
+// returns: void
 void timeInserting(vector<string>& v, list<string>& l, set<string>& s) {
     // VECTOR TESTING
     auto start = high_resolution_clock::now();
@@ -151,6 +174,11 @@ void timeInserting(vector<string>& v, list<string>& l, set<string>& s) {
     displayTimes("Insert", v_duration, l_duration, s_duration);
 }
 
+// timeDeleting() deletes a code from the middle of the ADTs and times it
+// parameters: vector<string>& v - the vector to delete from
+//             list<string>& l - the list to delete from
+//             set<string>& s - the set to delete from
+// returns: void
 void timeDeleting(vector<string>& v, list<string>& l, set<string>& s) {
     // VECTOR TESTING
     auto start = high_resolution_clock::now();
@@ -173,8 +201,8 @@ void timeDeleting(vector<string>& v, list<string>& l, set<string>& s) {
     // SET TESTING
     start = high_resolution_clock::now();
 
-    auto s_it = s.begin();
-    advance(s_it, s.size() / 2);
+    auto s_it = s.begin(); // Of course it doesn't really make sense to delete from position n of a set
+    advance(s_it, s.size() / 2); // But we do so with an iterator in the spirit of the race
     s.erase(s_it);
 
     end = high_resolution_clock::now();
