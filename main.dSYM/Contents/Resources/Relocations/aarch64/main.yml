@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/ian/comsc-210/210-lab-25/main'
+relocations:     []
+...
